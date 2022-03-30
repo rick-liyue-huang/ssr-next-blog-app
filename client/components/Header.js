@@ -10,6 +10,10 @@ import {
 	NavbarText
 } from 'reactstrap';
 import {APP_NAME} from "../config";
+import Link from 'next/link';
+import {signoutAction, isAuth} from "../actions/authAction";
+import Router from 'next/router';
+
 
 export const Header = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -19,16 +23,46 @@ export const Header = () => {
 	return (
 		<div>
 			<Navbar color="light" light expand="md">
-				<NavbarBrand href="/">{APP_NAME}</NavbarBrand>
+				<Link href={'/'}>
+					<NavbarBrand className={'font-weight-bold'}>{APP_NAME}</NavbarBrand>
+				</Link>
 				<NavbarToggler onClick={toggle} />
 				<Collapse isOpen={isOpen} navbar>
 					<Nav className="mr-auto" navbar>
-						<NavItem>
-							<NavLink href="/components/">Components</NavLink>
-						</NavItem>
-						<NavItem>
-							<NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
-						</NavItem>
+						{
+							!isAuth() && (
+								<>
+									<NavItem>
+										<Link  href={'/signin'}>
+											<NavLink
+												className={'font-weight-bold'}
+												style={{cursor:'pointer'}}
+											>SIGN IN</NavLink>
+										</Link>
+									</NavItem>
+									<NavItem>
+										<Link  href={'/signup'}>
+											<NavLink
+												className={'font-weight-bold'}
+												style={{cursor:'pointer'}}
+											>SIGN UP</NavLink>
+										</Link>
+									</NavItem>
+								</>
+							)
+						}
+
+						{
+							isAuth() && (
+								<NavItem>
+									<NavLink
+										onClick={() => signoutAction(() => Router.replace('/signin'))}
+										className={'font-weight-bold'}
+										style={{cursor:'pointer'}}
+									>SIGN OUT</NavLink>
+								</NavItem>
+							)
+						}
 					</Nav>
 					<NavbarText>Simple Text</NavbarText>
 				</Collapse>

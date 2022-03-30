@@ -8,6 +8,7 @@ const dotenv = require('dotenv');
 const {connectDB} = require('./config/connectDB');
 const colors = require('colors');
 const {blogRouter} = require("./routes/blogRoute");
+const {authRouter} = require("./routes/authRoute");
 
 dotenv.config();
 const PORT = process.env.PORT;
@@ -32,6 +33,7 @@ app.use(cookieParser());
 
 // routes config
 app.use('/api', blogRouter);
+app.use('/api', authRouter)
 
 
 // start server

@@ -10,6 +10,8 @@ const colors = require('colors');
 const {blogRouter} = require("./routes/blogRoute");
 const {authRouter} = require("./routes/authRoute");
 const {profileRouter} = require("./routes/profileRoute");
+const {categoryRouter} = require("./routes/categoryRoute");
+const {tagRouter} = require("./routes/tagRoute");
 
 dotenv.config();
 const PORT = process.env.PORT;
@@ -30,12 +32,15 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(express.static('public'))
 
 
 // routes config
 app.use('/api', blogRouter);
 app.use('/api', authRouter);
 app.use('/api', profileRouter);
+app.use('/api', categoryRouter);
+app.use('/api', tagRouter);
 
 
 // start server

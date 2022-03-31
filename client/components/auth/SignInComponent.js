@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {authenticate, signinAction, isAuth, hasWindow} from '../../actions/authAction'
+import {authenticate, signinAction, isAuth} from '../../actions/authAction'
 import Router from "next/router";
 
 export const SignInComponent = () => {
@@ -14,31 +14,30 @@ export const SignInComponent = () => {
 
 	const { email, password, error, loading, message, showForm } = values;
 
-	// useEffect(() => {
-	// 	isAuth() && Router.push(`/`);
-	// }, []);
+	useEffect(() => {
+		isAuth() && Router.push(`/`);
+	}, [isAuth]);
 
 	const handleSubmit = e => {
 		e.preventDefault();
 		// console.table({ name, email, password, error, loading, message, showForm });
-		setValues({
-			...values, loading: true, error: false
-		});
+		setValues({ ...values, loading: true, error: false });
 		const user = { email, password };
 
 		signinAction(user).then(data => {
 			if (data.error) {
 				setValues({ ...values, error: data.error, loading: false });
 			} else {
-			//	save user token to cookie
-
-			//	save user info in localstorage
-			//	authenticate user
+				// save user token to cookie
+				// save user info to localstorage
+				// authenticate user
 				authenticate(data, () => {
-					//	redirect to home page
-					Router.push('/')
-				})
-
+					if (isAuth() && isAuth().role === 1) {
+						Router.push(`/admin`);
+					} else {
+						Router.push(`/profile`);
+					}
+				});
 			}
 		});
 	};
@@ -77,7 +76,7 @@ export const SignInComponent = () => {
 				</div>
 
 				<div>
-					<button className="btn btn-block">Have an Account <spn className='font-weight-bolder'>SIGN IN ACCOUNT</spn> </button>
+					<button className="btn btn-block">Have an Account? <b>SIGN IN ACCOUNT</b></button>
 				</div>
 			</form>
 		);
@@ -91,6 +90,5 @@ export const SignInComponent = () => {
 			{showForm && signinForm()}
 		</React.Fragment>
 	);
-
 }
 

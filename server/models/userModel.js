@@ -41,7 +41,7 @@ const userSchema = new Schema({
 	},
 	role: {
 		type: Number,
-		default: 0
+		default: 0 // admin is 1
 	},
 	photo: {
 		data: Buffer,

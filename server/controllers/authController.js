@@ -86,6 +86,45 @@ exports.requireSignin = jwt({
 	algorithms: ['HS256']
 })
 
+const authMiddleware = (req, res, next) => {
+	const authUserId = req.user._id;
+	userModel.findById({_id: authUserId}).exec((err, user) => {
+		if (err || !user) {
+			return res.status(400).json({
+				error: 'user not found'
+			})
+		}
+
+		// set user as req.profile
+		req.profile = user;
+
+		next();
+	})
+}
+
+const adminMiddleware = (req, res, next) => {
+	const adminId = req.user._id;
+	userModel.findById({_id: adminId}).exec((err, user) => {
+		if (err || !user) {
+			return res.status(400).json({
+				error: 'user not found'
+			})
+		}
+
+		if (user.role !== 1) {
+		//	it's not admin
+			return res.status(400).json({
+				error: 'admin resource access denied'
+			})
+		}
+		// set admin as req.profile
+		req.profile = user;
+		next();
+	})
+}
+
+
 module.exports = {
 	signupController, signinController,
-	signoutController};
+	signoutController, authMiddleware, adminMiddleware
+};

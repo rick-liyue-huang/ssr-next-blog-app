@@ -1,11 +1,9 @@
 
-import getConfig from "next/config";
 
+import getConfig from 'next/config';
+const { publicRuntimeConfig } = getConfig();
 
-const {publicRuntimeConfig} = getConfig();
-
-// TODO
-export const API = publicRuntimeConfig.PRODUCTION ?
-	'http://ssrblog.com' :
+export const API = publicRuntimeConfig.PRODUCTION
+	? 'http://ssrblog.com' :
 	'http://localhost:8080/api'
-export const APP_NAME = publicRuntimeConfig.APP_NAME
+export const APP_NAME = publicRuntimeConfig.APP_NAME;

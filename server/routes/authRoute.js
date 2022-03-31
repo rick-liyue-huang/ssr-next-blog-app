@@ -10,6 +10,8 @@ authRouter.post('/signup', userSignupValidator, runValidation, signupController)
 authRouter.post('/signin', userSigninValidator, runValidation, signinController);
 authRouter.get('/signout', signoutController);
 
+/*
+
 authRouter.get('/secret',
 	jwt({
 		secret: process.env.JWT_SECRET,
@@ -17,8 +19,10 @@ authRouter.get('/secret',
 	}),
 	(req, res) => {
 		res.json({
-			message: 'you go to secret page'
+			user: req.user
 		})
 })
+*/
+
 
 module.exports = {authRouter};

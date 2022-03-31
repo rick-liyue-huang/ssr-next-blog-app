@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {hasWindow, isAuth, signupAction} from '../../actions/authAction'
+import {isAuth, signupAction} from '../../actions/authAction'
 import Router from "next/router";
 
 export const SignUpComponent = () => {
@@ -14,6 +14,10 @@ export const SignUpComponent = () => {
 	});
 
 	const { name, email, password, error, loading, message, showForm } = values;
+
+	useEffect(() => {
+		isAuth() && Router.push(`/`);
+	}, []);
 
 	const handleSubmit = e => {
 		e.preventDefault();
@@ -40,9 +44,7 @@ export const SignUpComponent = () => {
 	};
 
 	const handleChange = name => e => {
-		setValues({
-			...values, error: false, [name]: e.target.value
-		});
+		setValues({ ...values, error: false, [name]: e.target.value });
 	};
 
 	const showLoading = () => (loading ? <div className="alert alert-info">Loading...</div> : '');
@@ -83,15 +85,11 @@ export const SignUpComponent = () => {
 				</div>
 
 				<div>
-					<button className="btn btn-block">Not yet Signup? <spn className='font-weight-bolder'>CREATE ACCOUNT</spn> </button>
+					<button className="btn btn-block">Not yet Register? <b>CREATE AN ACCOUNT</b></button>
 				</div>
 			</form>
 		);
 	};
-
-	// useEffect(() => {
-	// 	hasWindow() && isAuth() && Router.push('/')
-	// }, [])
 
 	return (
 		<React.Fragment>

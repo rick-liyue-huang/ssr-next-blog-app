@@ -46,66 +46,54 @@ export const signoutAction = (next) => {
 		method: 'GET'
 	})
 		.then(response => {
-			console.log('sign out successfull')
+			console.log('signout success');
 		})
 		.catch(err => console.log(err));
 }
 
 //	manual cookie
 export const setCookie = (key, value) => {
-	if (hasWindow()) {
+	if (process.browser) {
 		cookie.set(key, value, {
 			expires: 1
-		})
-
+		});
 	}
-}
+};
 
-export const removeCookie = (key) => {
-	if (hasWindow()) {
+export const removeCookie = key => {
+	if (process.browser) {
 		cookie.remove(key, {
 			expires: 1
-		})
+		});
 	}
-}
-
-export const getCookie = (key) => {
-	if (hasWindow()) {
+};
+// get cookie
+export const getCookie = key => {
+	if (process.browser) {
 		return cookie.get(key);
 	}
-}
-
-//	manual localstorage
+};
+// localstorage
 export const setLocalStorage = (key, value) => {
-	if (hasWindow()) {
+	if (process.browser) {
 		localStorage.setItem(key, JSON.stringify(value));
 	}
-}
+};
 
-export const removeLocalStorage = (key) => {
-	if (hasWindow()) {
+export const removeLocalStorage = key => {
+	if (process.browser) {
 		localStorage.removeItem(key);
 	}
-}
-
-export const getLocalStorage = (key) => {
-	if (hasWindow()) {
-		return localStorage.getItem(key);
-	}
-}
-
-
-//	authenticate user
-
+};
+// autheticate user by pass data to cookie and localstorage
 export const authenticate = (data, next) => {
 	setCookie('token', data.token);
 	setLocalStorage('user', data.user);
 	next();
-}
-
+};
 
 export const isAuth = () => {
-	if (hasWindow()) {
+	if (process.browser) {
 		const cookieChecked = getCookie('token');
 		if (cookieChecked) {
 			if (localStorage.getItem('user')) {
@@ -115,4 +103,4 @@ export const isAuth = () => {
 			}
 		}
 	}
-}
+};

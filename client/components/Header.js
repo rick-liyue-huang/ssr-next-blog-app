@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
 	Collapse,
 	Navbar,
@@ -18,53 +18,64 @@ import Router from 'next/router';
 export const Header = () => {
 	const [isOpen, setIsOpen] = useState(false);
 
-	const toggle = () => setIsOpen(!isOpen);
+	const toggle = () => {
+		setIsOpen(!isOpen);
+	};
+
+	const [isBrowser, setIsBrowser] = useState(false);
+
+	useEffect(() => {
+		process.browser && setIsBrowser(true);
+	}, []);
 
 	return (
 		<div>
 			<Navbar color="light" light expand="md">
-				<Link href={'/'}>
-					<NavbarBrand className={'font-weight-bold'}>{APP_NAME}</NavbarBrand>
+				<Link href="/">
+					<NavLink className="font-weight-bold">{APP_NAME}</NavLink>
 				</Link>
 				<NavbarToggler onClick={toggle} />
 				<Collapse isOpen={isOpen} navbar>
-					<Nav className="mr-auto" navbar>
-						{
-							!isAuth() && (
-								<>
-									<NavItem>
-										<Link  href={'/signin'}>
-											<NavLink
-												className={'font-weight-bold'}
-												style={{cursor:'pointer'}}
-											>SIGN IN</NavLink>
-										</Link>
-									</NavItem>
-									<NavItem>
-										<Link  href={'/signup'}>
-											<NavLink
-												className={'font-weight-bold'}
-												style={{cursor:'pointer'}}
-											>SIGN UP</NavLink>
-										</Link>
-									</NavItem>
-								</>
-							)
-						}
-
-						{
-							isAuth() && (
+					<Nav className="ml-auto" navbar>
+						{isBrowser && !isAuth() && (
+							<React.Fragment>
 								<NavItem>
-									<NavLink
-										onClick={() => signoutAction(() => Router.replace('/signin'))}
-										className={'font-weight-bold'}
-										style={{cursor:'pointer'}}
-									>SIGN OUT</NavLink>
+									<Link href="/signin">
+										<NavLink style={{'cursor': "pointer"}}>SIGN IN</NavLink>
+									</Link>
 								</NavItem>
-							)
-						}
+								<NavItem>
+									<Link href="/signup">
+										<NavLink style={{'cursor': "pointer"}}>SIGN UP</NavLink>
+									</Link>
+								</NavItem>
+							</React.Fragment>
+						)}
+
+						{isBrowser && isAuth() && (isAuth().role === 0) && (
+							<NavItem>
+								<NavLink href={'/profile'}>
+									{`${isAuth().name.toUpperCase()}'s PROFILE`}
+								</NavLink>
+							</NavItem>
+						)}
+
+						{isBrowser && isAuth() && (isAuth().role === 1) && (
+							<NavItem>
+								<NavLink href={'/admin'}>
+									{`${isAuth().name.toUpperCase()}'s PROFILE`}
+								</NavLink>
+							</NavItem>
+						)}
+
+						{isBrowser && isAuth() && (
+							<NavItem>
+								<NavLink style={{ cursor: 'pointer' }} onClick={() => signoutAction(() => Router.replace(`/signin`))}>
+									SIGN OUT
+								</NavLink>
+							</NavItem>
+						)}
 					</Nav>
-					<NavbarText>Simple Text</NavbarText>
 				</Collapse>
 			</Navbar>
 		</div>

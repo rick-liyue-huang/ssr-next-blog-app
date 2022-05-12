@@ -1,7 +1,4 @@
 import '../styles/globals.css'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'nprogress/nprogress.css'
-import '../public/static/styles.css'
 
 
 function MyApp({ Component, pageProps }) {
